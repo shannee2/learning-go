@@ -1,16 +1,27 @@
 package dao
 
+import (
+	"context"
+	"sync"
+)
+
 type Idao interface {
-	GetCustomerDetailsFromSource(id int64) string
+	GetCustomerDetailsFromSource(ctx context.Context, id int64) string
 }
 
-func NewDAO() Idao {
-	return &DAOImpl{}
+var daoSync sync.Once
+var dao Idao
+
+func NewDAO(ctx context.Context) Idao {
+	daoSync.Do(func() {
+		dao = &DAOImpl{}
+	})
+	return dao
 }
 
 type DAOImpl struct {
 }
 
-func (di *DAOImpl) GetCustomerDetailsFromSource(id int64) string {
+func (di *DAOImpl) GetCustomerDetailsFromSource(ctx context.Context, id int64) string {
 	return "Shannee"
 }

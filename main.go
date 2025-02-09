@@ -1,16 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	api2 "learning-design/api"
-	dao2 "learning-design/dao"
+	apis "learning-design/api"
+	dao "learning-design/dao"
 	"learning-design/services"
 )
 
 func main() {
-	dao := dao2.NewDAO()
-	svc := services.NewCustomerDetailsService(dao)
-	api := api2.NewCustomerAPI(svc)
-	name, _ := api.GetCustomerNameById(1)
+	ctx := context.Background()
+	daobj := dao.NewDAO(ctx)
+	svc := services.NewCustomerDetailsService(ctx, daobj)
+	api := apis.NewCustomerAPI(ctx, svc)
+	name, _ := api.GetCustomerDetailsById(ctx, 1)
 	fmt.Println(name.Name)
 }
